@@ -22,7 +22,7 @@
 | **📹 Pose Estimation** | MediaPipe real-time skeleton tracking (15 keypoints × 3 features) |
 | **🌐 Web Dashboard** | Dark glassmorphism UI with animated gauge, rolling chart, WebSocket streaming |
 | **🖥️ Desktop Client** | Python/tkinter app with MJPEG video feed and matching Aegis Vision theme |
-| **⚡ Simulation Mode** | Automatic fallback to synthetic data when no camera is available |
+| **🚨 Strict Reality** | Hardware-aware startup. The system yields fatal errors if the camera feed disconnects. |
 | **🔔 Alert System** | Configurable threshold with timestamped fall detection alerts |
 
 ## 🚀 Quick Start

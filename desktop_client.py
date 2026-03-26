@@ -130,7 +130,6 @@ class EdgeSightDesktop(tk.Tk):
         self.fps = 0
         self.latency_ms = 0.0
         self.threshold = 0.75
-        self.simulation_mode = False
         self.prob_history = []
         self.alerts = []
         self.video_stream = None
@@ -392,7 +391,6 @@ class EdgeSightDesktop(tk.Tk):
             # Fetch system info
             info = self.api.system_info()
             if info:
-                self.simulation_mode = info.get("simulation_mode", False)
                 self._update_chips(info)
 
     def _on_stop(self):
@@ -500,7 +498,6 @@ class EdgeSightDesktop(tk.Tk):
             if stats:
                 self.probability = stats.get("fall_probability", 0.0)
                 self.fps = stats.get("fps", 0)
-                self.simulation_mode = stats.get("simulation_mode", False)
                 self.threshold = stats.get("threshold", 0.75)
 
                 # Update UI
@@ -640,7 +637,24 @@ def main():
     print(f"  Model loaded: {health.get('model_loaded', False)}")
     print(f"  Camera available: {health.get('camera_available', False)}")
 
+    if not health.get("camera_available", False):
+        print("\n[FATAL] No camera detected. EdgeSight strictly requires a camera.")
+        print("  Simulation mode has been removed. Please attach a camera.")
+
     app = EdgeSightDesktop(args.server)
+    
+    # Disable start if no camera
+    if not health.get("camera_available", False):
+        app.btn_start.config(state=tk.DISABLED)
+        app.video_canvas.delete("all")
+        app.video_canvas.create_text(
+            320, 240,
+            text="FATAL: NO CAMERA DETECTED",
+            fill=COLORS["tertiary"],
+            font=("Segoe UI", 16, "bold"),
+            tags="error"
+        )
+    
     app.mainloop()
 
 

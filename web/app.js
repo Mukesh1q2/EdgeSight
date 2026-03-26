@@ -169,7 +169,6 @@ function handleStatsUpdate(data) {
     const latency = data.latency_ms || 0;
     const threshold = data.threshold || 0.75;
     const isAlert = data.alert || false;
-    const simMode = data.simulation_mode || false;
 
     // Update gauge
     updateGauge(prob);
@@ -180,9 +179,6 @@ function handleStatsUpdate(data) {
     // Update telemetry chips
     els.fpsValue.textContent = fps;
     els.latencyValue.textContent = `${Math.round(latency)}ms`;
-
-    // Update simulation banner
-    els.simBanner.style.display = simMode ? 'flex' : 'none';
 
     // Update chart
     probabilityHistory.push(prob);
@@ -399,8 +395,17 @@ async function updateSystemInfo() {
         modelDot.className = 'status-dot status-dot--error';
     }
 
-    // Simulation banner
-    els.simBanner.style.display = info.simulation_mode ? 'flex' : 'none';
+    // Strict Reality Check
+    if (!info.camera_available) {
+        els.btnStart.disabled = true;
+        els.btnStart.style.opacity = '0.5';
+        els.btnStart.title = "No camera detected";
+        const placeholderIcon = els.videoPlaceholder.querySelector('#video-placeholder-icon');
+        const placeholderText = els.videoPlaceholder.querySelector('#video-placeholder-text');
+        
+        if (placeholderIcon) placeholderIcon.textContent = "⚠️";
+        if (placeholderText) placeholderText.innerHTML = "<strong style='color:#ff1744'>FATAL: NO CAMERA DETECTED</strong><br>Check hardware connection to start.";
+    }
 }
 
 // ============================================

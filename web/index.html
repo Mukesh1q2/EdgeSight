@@ -38,12 +38,6 @@
         </div>
     </header>
 
-    <!-- ============= SIMULATION BANNER ============= -->
-    <div class="sim-banner" id="sim-banner" style="display: none;">
-        <span class="sim-banner__icon">⚡</span>
-        <span>SIMULATION MODE — No camera detected. Using synthetic pose data for demonstration.</span>
-    </div>
-
     <!-- ============= MAIN DASHBOARD ============= -->
     <main class="dashboard">
         <!-- LEFT PANEL: Video Feed -->
@@ -57,8 +51,8 @@
             </div>
             <div class="video-container" id="video-container">
                 <div class="video-placeholder" id="video-placeholder">
-                    <div class="video-placeholder__icon">👁️</div>
-                    <p>Click <strong>START</strong> to begin detection</p>
+                    <div class="video-placeholder__icon" id="video-placeholder-icon">👁️</div>
+                    <p id="video-placeholder-text">Click <strong>START</strong> to begin detection</p>
                 </div>
                 <img id="video-feed" src="" alt="Live Video Feed" style="display:none;">
             </div>

@@ -77,7 +77,6 @@ class DetectionStats(BaseModel):
     threshold: float
     alert: bool
     timestamp: str
-    simulation_mode: bool
 
 class DetectionConfig(BaseModel):
     threshold: float = 0.75
@@ -93,7 +92,6 @@ class AlertHistory(BaseModel):
 class SystemInfo(BaseModel):
     camera_available: bool
     camera_index: int
-    simulation_mode: bool
     model_loaded: bool
     model_path: str
     mediapipe_available: bool
@@ -115,7 +113,6 @@ class DetectionState:
         self.last_update = time.time()
         self.model_session = None
         self.sequence_buffer: List[List[float]] = []
-        self.simulation_mode = False
         self.camera_available = False
         self.camera_index = CAMERA_INDEX
         self.cap = None
@@ -161,7 +158,6 @@ class DetectionState:
                 ret, frame = self.cap.read()
                 if ret and frame is not None:
                     self.camera_available = True
-                    self.simulation_mode = False
                     print("[OK] Camera opened successfully")
                     return True
             # Camera open failed
@@ -169,13 +165,11 @@ class DetectionState:
                 self.cap.release()
             self.cap = None
             self.camera_available = False
-            self.simulation_mode = True
-            print("[INFO] No camera detected — entering SIMULATION MODE")
+            print("[ERROR] No camera detected — strict reality mode active")
             return False
         except Exception as e:
-            print(f"[WARNING] Camera error: {e} — entering SIMULATION MODE")
+            print(f"[FATAL] Camera error: {e}")
             self.camera_available = False
-            self.simulation_mode = True
             return False
 
     def init_pose(self):
@@ -271,94 +265,10 @@ def extract_keypoints_mediapipe(frame: np.ndarray) -> Optional[List[float]]:
         ])
 
     # Pad from 45 (15*3) to 51 (17*3)
-    padded = keypoints + [0.0] * 6
     return padded
 
 
-def generate_synthetic_keypoints() -> List[float]:
-    """Generate simulated pose keypoints for demo mode."""
-    t = time.time()
-    keypoints = np.zeros((15, 3), dtype=np.float32)
 
-    # Simulated standing person with subtle movement
-    base_x, base_y = 0.5, 0.3
-    sway = np.sin(t * 0.5) * 0.02
-
-    positions = [
-        (0.0, -0.15),   # Nose
-        (-0.08, -0.05), # L shoulder
-        (0.08, -0.05),  # R shoulder
-        (-0.15, 0.05),  # L elbow
-        (0.15, 0.05),   # R elbow
-        (-0.18, 0.15),  # L wrist
-        (0.18, 0.15),   # R wrist
-        (-0.06, 0.15),  # L hip
-        (0.06, 0.15),   # R hip
-        (-0.07, 0.30),  # L knee
-        (0.07, 0.30),   # R knee
-        (-0.07, 0.45),  # L ankle
-        (0.07, 0.45),   # R ankle
-        (-0.08, 0.48),  # L foot
-        (0.08, 0.48),   # R foot
-    ]
-
-    for i, (dx, dy) in enumerate(positions):
-        keypoints[i, 0] = base_x + dx + sway + np.random.randn() * 0.005
-        keypoints[i, 1] = base_y + dy + np.random.randn() * 0.005
-        keypoints[i, 2] = 0.85 + np.random.rand() * 0.15
-
-    flat = keypoints.flatten().tolist()
-    padded = flat + [0.0] * 6  # Pad to 51
-    return padded
-
-
-def draw_skeleton(frame: np.ndarray, keypoints: List[float], color=(0, 255, 128)):
-    """Draw pose skeleton on frame."""
-    h, w = frame.shape[:2]
-    points = []
-
-    for i in range(15):
-        x = int(keypoints[i * 3] * w)
-        y = int(keypoints[i * 3 + 1] * h)
-        conf = keypoints[i * 3 + 2]
-        points.append((x, y, conf))
-
-    # Draw connections
-    for (a, b) in SKELETON_CONNECTIONS:
-        if a < len(points) and b < len(points):
-            if points[a][2] > 0.3 and points[b][2] > 0.3:
-                cv2.line(frame, (points[a][0], points[a][1]),
-                         (points[b][0], points[b][1]), color, 2, cv2.LINE_AA)
-
-    # Draw keypoints
-    for (x, y, conf) in points:
-        if conf > 0.3:
-            cv2.circle(frame, (x, y), 4, (0, 212, 255), -1, cv2.LINE_AA)
-            cv2.circle(frame, (x, y), 6, color, 1, cv2.LINE_AA)
-
-    return frame
-
-
-def draw_simulation_person(frame: np.ndarray, keypoints: List[float]):
-    """Draw a simulation-mode person on a dark frame with grid."""
-    h, w = frame.shape[:2]
-
-    # Draw subtle grid
-    for x in range(0, w, 40):
-        cv2.line(frame, (x, 0), (x, h), (20, 30, 40), 1)
-    for y in range(0, h, 40):
-        cv2.line(frame, (0, y), (w, y), (20, 30, 40), 1)
-
-    # Draw skeleton
-    draw_skeleton(frame, keypoints, color=(0, 200, 100))
-
-    # Simulation badge
-    cv2.rectangle(frame, (w - 200, 5), (w - 5, 30), (0, 80, 160), -1)
-    cv2.putText(frame, "SIMULATION MODE", (w - 195, 23),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 212, 255), 1, cv2.LINE_AA)
-
-
-# ============================================
 # Inference
 # ============================================
 def run_inference(sequence: List[List[float]]) -> float:
@@ -425,7 +335,7 @@ async def detection_loop():
     # Initialize pose estimator
     state.init_pose()
 
-    print(f"[INFO] Detection started | Camera: {state.camera_available} | Simulation: {state.simulation_mode}")
+    print(f"[INFO] Detection started | Camera: {state.camera_available}")
 
     while state.is_running:
         frame = None
@@ -445,21 +355,22 @@ async def detection_loop():
                     draw_skeleton(frame, keypoints)
                 else:
                     state.pose_detected = False
-            else:
-                # Camera read failed, switch to simulation
+                # Camera read failed
                 state.camera_available = False
-                state.simulation_mode = True
                 if state.cap:
                     state.cap.release()
-                print("[WARNING] Camera read failed — switching to SIMULATION MODE")
+                print("[FATAL] Camera read failed")
 
-        # ---- Simulation mode ----
-        if state.simulation_mode or frame is None:
-            keypoints = generate_synthetic_keypoints()
-            state.pose_detected = True
+        if not state.camera_available or frame is None:
+            # Fatal error frame
             frame = np.zeros((480, 640, 3), dtype=np.uint8)
             frame[:] = (10, 14, 26)
-            draw_simulation_person(frame, keypoints)
+            cv2.putText(frame, "FATAL ERROR: NO CAMERA DETECTED", (80, 240),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            cv2.putText(frame, "Check hardware connections", (150, 280),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (100, 150, 200), 1)
+            keypoints = None
+            state.pose_detected = False
 
         # ---- Overlay info on frame ----
         if frame is not None:
@@ -537,8 +448,7 @@ async def get_stats():
         fps=state.fps,
         threshold=state.threshold,
         alert=state.fall_probability > state.threshold,
-        timestamp=datetime.now().isoformat(),
-        simulation_mode=state.simulation_mode,
+        timestamp=datetime.now().isoformat()
     )
 
 
@@ -554,7 +464,6 @@ async def get_system_info():
     return SystemInfo(
         camera_available=state.camera_available,
         camera_index=state.camera_index,
-        simulation_mode=state.simulation_mode,
         model_loaded=state.model_session is not None,
         model_path=str(MODEL_PATH),
         mediapipe_available=MEDIAPIPE_AVAILABLE,
@@ -575,7 +484,6 @@ async def start_detection():
         asyncio.create_task(detection_loop())
         return {
             "status": "started",
-            "simulation_mode": state.simulation_mode,
             "message": "Detection started"
         }
     return {"status": "already_running"}
@@ -616,10 +524,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 "type": "stats",
                 "fall_probability": round(state.fall_probability, 4),
                 "fps": state.fps,
-                "threshold": state.threshold,
-                "alert": state.fall_probability > state.threshold,
-                "simulation_mode": state.simulation_mode,
-                "pose_detected": state.pose_detected,
+        "threshold": state.threshold,
+        "alert": state.fall_probability > state.threshold,
+        "pose_detected": state.pose_detected,
                 "latency_ms": round(state.inference_latency_ms, 1),
                 "timestamp": datetime.now().strftime("%H:%M:%S"),
             }
@@ -638,8 +545,7 @@ async def health_check():
         "status": "healthy",
         "model_loaded": state.model_session is not None,
         "detection_running": state.is_running,
-        "camera_available": state.camera_available,
-        "simulation_mode": state.simulation_mode,
+        "camera_available": state.camera_available
     }
 
 
