@@ -78,9 +78,9 @@ python desktop_client.py
 ┌─────────────┐                         │  │   Pose     │  │
 │ C++ Native  │   (local inference)     │  └────────────┘  │
 │ Application │                         │  ┌────────────┐  │
-└─────────────┘                         │  │  Camera /  │  │
-                                        │  │ Simulation │  │
+└─────────────┘                         │  │   Camera   │  │
                                         │  └────────────┘  │
+                                        │                  │
                                         └──────────────────┘
 ```
 
