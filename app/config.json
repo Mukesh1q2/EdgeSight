@@ -1,0 +1,20 @@
+{
+    "camera_index": 0,
+    "camera_width": 640,
+    "camera_height": 480,
+    "camera_fps": 30,
+    "detection_threshold": 0.85,
+    "fall_frame_threshold": 3,
+    "buffer_size": 16,
+    "model_path": "model/exported/fall_detection.onnx",
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "alert_email": "",
+    "sender_email": "",
+    "sms_gateway": "",
+    "auto_start": false,
+    "save_alerts": true,
+    "log_directory": "app/logs",
+    "use_gpu": true,
+    "inference_threads": 1
+}

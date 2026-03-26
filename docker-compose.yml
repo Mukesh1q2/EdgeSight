@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # EdgeSight Web Application
+  # ============================================
+  edgesight:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./model/exported:/app/model/exported
+      - ./data/processed:/app/data/processed
+      - ./app/logs:/app/app/logs
+    environment:
+      - MODEL_PATH=model/exported/fall_detection.onnx
+      - LOG_LEVEL=INFO
+    restart: unless-stopped
+    networks:
+      - edgesight-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/stats"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # Redis for alert queue (optional)
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - edgesight-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # Prometheus for metrics (optional)
+  # ============================================
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - edgesight-network
+
+  # ============================================
+  # Grafana for dashboards (optional)
+  # ============================================
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - edgesight-network
+    depends_on:
+      - prometheus
+
+networks:
+  edgesight-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  prometheus-data:
+  grafana-data:

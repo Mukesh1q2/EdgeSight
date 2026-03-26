@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EdgeSight - Real-time AI-powered fall detection monitoring dashboard for elderly care">
+    <title>EdgeSight | Fall Detection Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁️</text></svg>">
+</head>
+<body>
+    <!-- ============= TOP BAR ============= -->
+    <header class="topbar" id="topbar">
+        <div class="topbar__brand">
+            <span class="topbar__dot"></span>
+            <h1 class="topbar__logo">EDGE<span>SIGHT</span></h1>
+        </div>
+        <div class="topbar__status">
+            <div class="status-chip" id="chip-camera">
+                <span class="status-dot status-dot--inactive"></span>
+                <span>Camera</span>
+            </div>
+            <div class="status-chip" id="chip-model">
+                <span class="status-dot status-dot--inactive"></span>
+                <span>Model</span>
+            </div>
+            <div class="status-chip" id="chip-fps">
+                <span class="telemetry-label">FPS</span>
+                <span class="telemetry-value" id="fps-value">0</span>
+            </div>
+            <div class="status-chip" id="chip-latency">
+                <span class="telemetry-label">Latency</span>
+                <span class="telemetry-value" id="latency-value">0ms</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============= SIMULATION BANNER ============= -->
+    <div class="sim-banner" id="sim-banner" style="display: none;">
+        <span class="sim-banner__icon">⚡</span>
+        <span>SIMULATION MODE — No camera detected. Using synthetic pose data for demonstration.</span>
+    </div>
+
+    <!-- ============= MAIN DASHBOARD ============= -->
+    <main class="dashboard">
+        <!-- LEFT PANEL: Video Feed -->
+        <section class="panel panel--video" id="video-panel">
+            <div class="panel__header">
+                <h2 class="panel__title">Live Feed</h2>
+                <div class="pulse" id="live-pulse" style="display:none;">
+                    <span class="pulse__dot"></span>
+                    <span class="pulse__label">LIVE</span>
+                </div>
+            </div>
+            <div class="video-container" id="video-container">
+                <div class="video-placeholder" id="video-placeholder">
+                    <div class="video-placeholder__icon">👁️</div>
+                    <p>Click <strong>START</strong> to begin detection</p>
+                </div>
+                <img id="video-feed" src="" alt="Live Video Feed" style="display:none;">
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: Telemetry -->
+        <section class="panel panel--telemetry">
+            <!-- Gauge -->
+            <div class="gauge-card" id="gauge-card">
+                <svg class="gauge-ring" viewBox="0 0 200 200" id="gauge-svg">
+                    <defs>
+                        <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00d4ff"/>
+                            <stop offset="50%" stop-color="#ff9800"/>
+                            <stop offset="100%" stop-color="#ff1744"/>
+                        </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <circle class="gauge-bg" cx="100" cy="100" r="85" />
+                    <circle class="gauge-progress" cx="100" cy="100" r="85" id="gauge-progress"
+                            stroke-dasharray="534" stroke-dashoffset="534" filter="url(#glow)" />
+                </svg>
+                <div class="gauge-center">
+                    <span class="gauge-value" id="gauge-value">0.0</span>
+                    <span class="gauge-unit">%</span>
+                    <span class="gauge-label">FALL RISK</span>
+                </div>
+            </div>
+
+            <!-- Risk Badge -->
+            <div class="risk-badge" id="risk-badge">
+                <span class="risk-badge__level" id="risk-level">LOW</span>
+            </div>
+
+            <!-- Threshold Control -->
+            <div class="control-card">
+                <label class="control-label" for="threshold-slider">Detection Threshold</label>
+                <div class="slider-row">
+                    <input type="range" id="threshold-slider" class="slider" min="50" max="95" value="75">
+                    <span class="slider-value" id="threshold-value">75%</span>
+                </div>
+            </div>
+
+            <!-- Probability Chart -->
+            <div class="chart-card">
+                <h3 class="chart-title">Probability History <span class="chart-subtitle">(60s)</span></h3>
+                <canvas id="prob-chart" width="400" height="120"></canvas>
+            </div>
+
+            <!-- Alert Log -->
+            <div class="alert-card">
+                <h3 class="alert-title">
+                    <span>Alert Log</span>
+                    <span class="alert-count" id="alert-count">0</span>
+                </h3>
+                <ul class="alert-list" id="alert-list">
+                    <li class="alert-empty">No alerts yet</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============= BOTTOM BAR ============= -->
+    <footer class="bottombar">
+        <div class="bottombar__controls">
+            <button class="btn btn--start" id="btn-start" onclick="startDetection()">
+                <span class="btn__icon">▶</span> START
+            </button>
+            <button class="btn btn--stop" id="btn-stop" onclick="stopDetection()" disabled>
+                <span class="btn__icon">⏹</span> STOP
+            </button>
+        </div>
+        <div class="bottombar__selectors">
+            <div class="selector">
+                <label for="camera-select">Camera</label>
+                <select id="camera-select">
+                    <option value="0">Camera 0</option>
+                    <option value="1">Camera 1</option>
+                </select>
+            </div>
+            <div class="selector">
+                <label for="model-select">Model</label>
+                <select id="model-select">
+                    <option value="fp32">FP32 (Default)</option>
+                    <option value="int8">INT8 (Fast)</option>
+                </select>
+            </div>
+        </div>
+        <div class="bottombar__info">
+            <span class="version-tag">EdgeSight v2.0</span>
+        </div>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

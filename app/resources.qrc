@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/icons/app_icon.png</file>
+        <file>assets/icons/fall_warning.png</file>
+        <file>assets/icons/safe_status.png</file>
+    </qresource>
+</RCC>

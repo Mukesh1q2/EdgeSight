@@ -1,0 +1,191 @@
+# EdgeSight - .gitignore
+# See https://git-scm.com/docs/gitignore
+
+# =============================================================================
+# Build outputs
+# =============================================================================
+build/
+cmake-build-*/
+out/
+Debug/
+Release/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# CMake
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# =============================================================================
+# Large data files (should not be committed)
+# =============================================================================
+# Raw video datasets (too large)
+data/raw/urfall/**/*.avi
+data/raw/urfall/**/*.mp4
+data/raw/le2i/**/*.avi
+data/raw/le2i/**/*.mp4
+data/raw/**/*.avi
+data/raw/**/*.mp4
+data/raw/**/*.mov
+data/raw/**/*.mkv
+
+# Processed numpy arrays (regenerable)
+data/processed/*.npy
+data/processed/**/*.npy
+
+# Model weights (large binary files)
+model/checkpoints/*.pt
+model/checkpoints/*.pth
+model/checkpoints/*.ckpt
+model/exported/*.onnx
+model/exported/*.pb
+model/results/*.png
+model/results/*.jpg
+model/results/*.pdf
+
+# Logs
+app/logs/*.csv
+app/logs/*.log
+*.log
+
+# =============================================================================
+# C++
+# =============================================================================
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# =============================================================================
+# Qt
+# =============================================================================
+# Qt Creator
+*.autosave
+*.qmlproject.user
+*.qmlproject.user.*
+*.pro.user
+*.pro.user.*
+
+# Qt generated
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+
+# =============================================================================
+# ONNX Runtime
+# =============================================================================
+inference/engine/third_party/
+*.ort
+
+# =============================================================================
+# OS generated
+# =============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+Thumbs.db
+$RECYCLE.BIN/
+.directory
