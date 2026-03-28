@@ -1,0 +1,3 @@
+## 2024-03-28 - String Parsing in Computer Vision Hot Loops
+**Learning:** Using `datetime.strptime()` to parse strings back into datetime objects inside a high-frequency (30 FPS) computer vision hot loop is a significant performance anti-pattern. String operations are computationally expensive and creating temporary strings/objects every frame degrades inference throughput.
+**Action:** Always maintain state (like the last alert time) using native data types (e.g., `datetime` objects) and calculate deltas directly (`(now - last_time).total_seconds()`). Only format to strings at the exact boundary where the data needs to be serialized or outputted.

@@ -109,6 +109,7 @@ class DetectionState:
         self.fps = 0
         self.threshold = 0.75
         self.alerts: List[dict] = []
+        self.last_alert_time = None
         self.frame_count = 0
         self.last_update = time.time()
         self.model_session = None
@@ -420,16 +421,17 @@ async def detection_loop():
 
         # ---- Check for alert ----
         if state.fall_probability > state.threshold:
-            alert = {
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "probability": round(state.fall_probability, 3)
-            }
+            current_time = datetime.now()
             # Don't spam alerts — cooldown of 2 seconds
-            if not state.alerts or (datetime.now() - datetime.strptime(
-                    state.alerts[-1]["timestamp"], "%H:%M:%S")).seconds >= 2:
+            if state.last_alert_time is None or (current_time - state.last_alert_time).total_seconds() >= 2:
+                state.last_alert_time = current_time
+                alert = {
+                    "timestamp": current_time.strftime("%H:%M:%S"),
+                    "probability": round(state.fall_probability, 3)
+                }
                 state.alerts.append(alert)
-            if len(state.alerts) > 100:
-                state.alerts.pop(0)
+                if len(state.alerts) > 100:
+                    state.alerts.pop(0)
 
         await asyncio.sleep(0.033)  # ~30 FPS
 
@@ -481,6 +483,7 @@ async def start_detection():
         state.sequence_buffer = []
         state.fall_probability = 0.0
         state.alerts = []
+        state.last_alert_time = None
         asyncio.create_task(detection_loop())
         return {
             "status": "started",
