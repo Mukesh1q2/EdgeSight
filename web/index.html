@@ -114,7 +114,7 @@
                     <span>Alert Log</span>
                     <span class="alert-count" id="alert-count">0</span>
                 </h3>
-                <ul class="alert-list" id="alert-list">
+                <ul class="alert-list" id="alert-list" aria-live="polite">
                     <li class="alert-empty">No alerts yet</li>
                 </ul>
             </div>
@@ -125,10 +125,10 @@
     <footer class="bottombar">
         <div class="bottombar__controls">
             <button class="btn btn--start" id="btn-start" onclick="startDetection()">
-                <span class="btn__icon">▶</span> START
+                <span class="btn__icon" aria-hidden="true">▶</span> START
             </button>
             <button class="btn btn--stop" id="btn-stop" onclick="stopDetection()" disabled>
-                <span class="btn__icon">⏹</span> STOP
+                <span class="btn__icon" aria-hidden="true">⏹</span> STOP
             </button>
         </div>
         <div class="bottombar__selectors">

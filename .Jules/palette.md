@@ -1,0 +1,3 @@
+## 2024-05-16 - Focus rings on custom input styles
+**Learning:** Elements styled with `-webkit-appearance: none` and `outline: none` (like `.slider`) completely break native keyboard focus rings, creating severe accessibility issues for non-mouse users navigating via `Tab`.
+**Action:** Always ensure any element with custom `-webkit-appearance` styles also implements a custom `:focus-visible` ring using design system tokens.
