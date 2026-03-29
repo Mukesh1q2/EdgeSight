@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid datetime.strptime in high-frequency CV loops
+**Learning:** `datetime.strptime()` is computationally expensive and performs string parsing on every iteration. Using it inside a high-frequency (30 FPS) computer vision hot loop (`detection_loop` in `fastapi_server.py`) blocks the event loop unnecessarily during fall detection events, reducing overall system performance and increasing latency.
+**Action:** Avoid expensive string parsing in hot loops. Cache datetime objects (`state.last_alert_time`) instead of strings and use `(now - last).total_seconds()` to calculate elapsed time for throttled actions.
