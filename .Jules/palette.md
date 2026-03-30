@@ -1,0 +1,3 @@
+## 2026-03-30 - Real-time Dashboard Accessibility
+**Learning:** Real-time updating telemetry elements (e.g., FPS, latency, gauges, logs) are effectively invisible to screen readers unless specifically marked as live regions. Given the high update frequency (e.g., 10Hz/30 FPS), a balance must be struck; using `aria-live="polite"` allows the screen reader to announce updates when idle, avoiding interrupting the user constantly, unlike `aria-live="assertive"`.
+**Action:** Always add `aria-live="polite"` to dynamically updating UI text nodes (counts, telemetry values, risk badges) in real-time dashboards to ensure these state changes are accessible to non-visual users.

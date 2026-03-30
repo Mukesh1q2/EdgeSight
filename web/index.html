@@ -29,11 +29,11 @@
             </div>
             <div class="status-chip" id="chip-fps">
                 <span class="telemetry-label">FPS</span>
-                <span class="telemetry-value" id="fps-value">0</span>
+                <span class="telemetry-value" id="fps-value" aria-live="polite">0</span>
             </div>
             <div class="status-chip" id="chip-latency">
                 <span class="telemetry-label">Latency</span>
-                <span class="telemetry-value" id="latency-value">0ms</span>
+                <span class="telemetry-value" id="latency-value" aria-live="polite">0ms</span>
             </div>
         </div>
     </header>
@@ -82,7 +82,7 @@
                             stroke-dasharray="534" stroke-dashoffset="534" filter="url(#glow)" />
                 </svg>
                 <div class="gauge-center">
-                    <span class="gauge-value" id="gauge-value">0.0</span>
+                    <span class="gauge-value" id="gauge-value" aria-live="polite">0.0</span>
                     <span class="gauge-unit">%</span>
                     <span class="gauge-label">FALL RISK</span>
                 </div>
@@ -90,7 +90,7 @@
 
             <!-- Risk Badge -->
             <div class="risk-badge" id="risk-badge">
-                <span class="risk-badge__level" id="risk-level">LOW</span>
+                <span class="risk-badge__level" id="risk-level" aria-live="polite">LOW</span>
             </div>
 
             <!-- Threshold Control -->
@@ -112,9 +112,9 @@
             <div class="alert-card">
                 <h3 class="alert-title">
                     <span>Alert Log</span>
-                    <span class="alert-count" id="alert-count">0</span>
+                    <span class="alert-count" id="alert-count" aria-live="polite">0</span>
                 </h3>
-                <ul class="alert-list" id="alert-list">
+                <ul class="alert-list" id="alert-list" aria-live="polite">
                     <li class="alert-empty">No alerts yet</li>
                 </ul>
             </div>
