@@ -1,0 +1,3 @@
+## 2024-05-28 - String parsing in high-frequency CV loop
+**Learning:** Found `datetime.strptime()` being used to parse timestamp strings during every frame (30 FPS) whenever `fall_probability > threshold` was true. This computationally expensive operation blocks the main thread in the hot loop, causing skipped frames and latency spikes precisely when performance matters most (during an active alert event).
+**Action:** When implementing throttles or cooldowns in high-frequency loops, always use native objects (like `datetime` or `time.time()`) for state and time deltas. Only convert to strings at the very edge (like API boundaries) or within the low-frequency code branch that is executing.
