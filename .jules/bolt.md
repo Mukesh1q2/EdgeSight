@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid string parsing in high-frequency hot loops
+**Learning:** Calling `datetime.strptime()` inside a 30 FPS computer vision hot loop (`detection_loop` in `fastapi_server.py`) can be computationally expensive and impact real-time performance, even when checking for simple timestamp differences. The previous implementation checked for alert spamming by parsing the last alert's string timestamp back into a datetime object on every frame where the threshold was exceeded.
+**Action:** Use native data types (like storing a `last_alert_time` datetime object) to handle performance-optimized alert throttling. Only perform string formatting operations when the data is strictly needed for external communication (like pushing the alert over websockets).
