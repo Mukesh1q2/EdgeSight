@@ -27,11 +27,11 @@
                 <span class="status-dot status-dot--inactive"></span>
                 <span>Model</span>
             </div>
-            <div class="status-chip" id="chip-fps">
+            <div class="status-chip" id="chip-fps" aria-live="polite" aria-atomic="true">
                 <span class="telemetry-label">FPS</span>
                 <span class="telemetry-value" id="fps-value">0</span>
             </div>
-            <div class="status-chip" id="chip-latency">
+            <div class="status-chip" id="chip-latency" aria-live="polite" aria-atomic="true">
                 <span class="telemetry-label">Latency</span>
                 <span class="telemetry-value" id="latency-value">0ms</span>
             </div>
@@ -81,7 +81,7 @@
                     <circle class="gauge-progress" cx="100" cy="100" r="85" id="gauge-progress"
                             stroke-dasharray="534" stroke-dashoffset="534" filter="url(#glow)" />
                 </svg>
-                <div class="gauge-center">
+                <div class="gauge-center" aria-live="polite" aria-atomic="true">
                     <span class="gauge-value" id="gauge-value">0.0</span>
                     <span class="gauge-unit">%</span>
                     <span class="gauge-label">FALL RISK</span>
@@ -89,7 +89,7 @@
             </div>
 
             <!-- Risk Badge -->
-            <div class="risk-badge" id="risk-badge">
+            <div class="risk-badge" id="risk-badge" aria-live="polite" aria-atomic="true">
                 <span class="risk-badge__level" id="risk-level">LOW</span>
             </div>
 
@@ -112,9 +112,9 @@
             <div class="alert-card">
                 <h3 class="alert-title">
                     <span>Alert Log</span>
-                    <span class="alert-count" id="alert-count">0</span>
+                    <span class="alert-count" id="alert-count" aria-live="polite" aria-atomic="true">0</span>
                 </h3>
-                <ul class="alert-list" id="alert-list">
+                <ul class="alert-list" id="alert-list" aria-live="polite" aria-relevant="additions">
                     <li class="alert-empty">No alerts yet</li>
                 </ul>
             </div>

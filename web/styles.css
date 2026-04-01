@@ -431,6 +431,10 @@ body {
     border-radius: var(--radius-full);
     outline: none;
 }
+.slider:focus-visible {
+    box-shadow: 0 0 0 2px var(--primary-soft);
+}
+
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -444,6 +448,9 @@ body {
 }
 .slider::-webkit-slider-thumb:hover {
     box-shadow: 0 0 18px rgba(0, 212, 255, 0.6);
+}
+.slider:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.3);
 }
 
 .slider-value {
@@ -589,6 +596,10 @@ body {
     letter-spacing: 0.08em;
     cursor: pointer;
     transition: all 0.25s var(--ease);
+}
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--surface-highest), 0 0 0 4px var(--primary-soft);
 }
 .btn__icon { font-size: 0.75rem; }
 
