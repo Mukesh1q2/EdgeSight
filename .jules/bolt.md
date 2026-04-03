@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid datetime string parsing in hot loops
+**Learning:** Found a performance bottleneck in the high-frequency 30 FPS `detection_loop`. It was using the computationally expensive `datetime.strptime()` every frame to parse timestamps from alert dictionary strings just to check a 2-second cooldown, unnecessarily blocking the main thread.
+**Action:** Use native `datetime` objects for time delta calculations in hot loops and delay expensive string formatting (like `strftime`) until after necessary conditions are met to save CPU cycles.
