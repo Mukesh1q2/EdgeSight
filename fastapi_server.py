@@ -111,6 +111,7 @@ class DetectionState:
         self.alerts: List[dict] = []
         self.frame_count = 0
         self.last_update = time.time()
+        self.last_alert_time: Optional[datetime] = None  # Track datetime directly for fast comparison
         self.model_session = None
         self.sequence_buffer: List[List[float]] = []
         self.camera_available = False
@@ -420,14 +421,18 @@ async def detection_loop():
 
         # ---- Check for alert ----
         if state.fall_probability > state.threshold:
-            alert = {
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "probability": round(state.fall_probability, 3)
-            }
-            # Don't spam alerts — cooldown of 2 seconds
-            if not state.alerts or (datetime.now() - datetime.strptime(
-                    state.alerts[-1]["timestamp"], "%H:%M:%S")).seconds >= 2:
+            current_dt = datetime.now()
+
+            # Bolt optimization: Avoid expensive string parsing in high-frequency (30 FPS) loop
+            # Uses direct datetime delta comparison instead of datetime.strptime
+            if state.last_alert_time is None or (current_dt - state.last_alert_time).total_seconds() >= 2:
+                alert = {
+                    "timestamp": current_dt.strftime("%H:%M:%S"),
+                    "probability": round(state.fall_probability, 3)
+                }
                 state.alerts.append(alert)
+                state.last_alert_time = current_dt
+
             if len(state.alerts) > 100:
                 state.alerts.pop(0)
 
