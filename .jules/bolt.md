@@ -1,0 +1,3 @@
+## 2025-02-24 - Avoid datetime parsing in high-frequency computer vision loops
+**Learning:** Avoid computationally expensive string operations like `datetime.strptime()` and `datetime.strftime()` inside high-frequency (e.g., 30 FPS) hot loops like `detection_loop`. Using them for throttling logic introduces unnecessary latency and CPU overhead.
+**Action:** Use native data types (like floats from `time.time()`) and pre-calculated deltas for time comparisons and throttling logic. Defer expensive string formatting (like `strftime()`) until after conditional checks or rate limits have passed.
