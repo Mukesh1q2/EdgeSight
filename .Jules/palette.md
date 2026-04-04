@@ -1,0 +1,3 @@
+## 2024-05-20 - Adding keyboard accessibility and screen reader support to dashboard elements
+**Learning:** High-frequency, dynamic data displays in dashboards (like real-time metrics and rolling alert logs) must utilize `aria-live="polite"` so screen readers can announce changes organically without disrupting the user flow. Additionally, standard semantic elements (`<button>`, `<input type="range">`, `<select>`) need explicit `:focus-visible` styling—specifically customized outlines—to remain accessible for keyboard navigation against complex or dark surfaces.
+**Action:** Always verify keyboard tabbing visibility and ensure `aria-live` regions exist for auto-updating components in future dashboard builds.
