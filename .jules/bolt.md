@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid string parsing in hot loops
+**Learning:** Parsing strings to datetime objects (e.g. `datetime.strptime`) inside high-frequency (30 FPS) hot loops like `detection_loop` is computationally expensive and an anti-pattern. Further, creating formatted timestamp strings (`strftime`) when they are frequently unused (discarded by rate limiting) wastes CPU cycles.
+**Action:** Use native data types and pre-calculated deltas (`time.time()` float subtraction) for rate limits in hot loops. Defer expensive string formatting until *after* the rate-limit condition passes.
