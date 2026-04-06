@@ -1,0 +1,3 @@
+## 2024-05-24 - Expensive Datetime Operations in Hot Loops
+**Learning:** Found a severe performance anti-pattern in `fastapi_server.py` where `datetime.strptime()` and `datetime.now().strftime()` were being called in the 30 FPS `detection_loop` whenever fall probability exceeded the threshold. This caused unnecessary string parsing and memory allocations on every single frame during a "fall detected" state, blocking the main inference loop.
+**Action:** When handling throttled events (like alerts) inside high-frequency hot loops (like video processing), always use native data types (e.g., float timestamps from `time.time()`) for cooldown checks. Defer expensive string formatting until *after* the rate limit has passed.
