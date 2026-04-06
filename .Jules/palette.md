@@ -1,0 +1,3 @@
+## 2024-04-06 - WebSocket UI Accessibility
+**Learning:** Real-time dashboards driven by WebSockets (like EdgeSight) update critical DOM elements (badges, alert logs) without triggering screen reader announcements by default, leaving vision-impaired users unaware of dynamic state changes.
+**Action:** Always apply `aria-live="polite"` (or `"assertive"` for critical alerts) to containers that receive high-frequency data updates to ensure inclusive design.
