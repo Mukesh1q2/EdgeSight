@@ -1,0 +1,3 @@
+## 2024-05-24 - Expensive Datetime Operations in High-Frequency Loops
+**Learning:** Found an anti-pattern where computationally expensive string operations (`datetime.now().strftime` and `datetime.strptime`) were placed inside the 30 FPS high-frequency computer vision hot loop (`detection_loop`) to handle alert rate-limiting. This unnecessarily consumes CPU resources when string formatting should be deferred until after rate-limits pass.
+**Action:** When implementing rate limiting or timestamps in high-frequency loops, use native float arithmetic (e.g., `time.time()`) and delay string formatting/parsing until it is absolutely necessary (after the conditional check has passed).
