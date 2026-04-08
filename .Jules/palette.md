@@ -1,0 +1,3 @@
+## 2025-01-20 - Screen Reader Accessibility for Dynamic Telemetry
+**Learning:** Adding `aria-live` to high-frequency updates (like a 10Hz gauge or probability chart) completely overwhelms screen readers, rendering the interface unusable. However, `aria-live` is essential for critical, low-frequency dynamic components like alert lists or risk badges.
+**Action:** Always constrain `aria-live` attributes to specific, low-frequency alerts or badge updates. Never apply them globally to fast-updating real-time data visualisations. Use `aria-hidden="true"` on non-semantic visual indicators like decorative button icons to keep screen reader output concise.
