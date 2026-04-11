@@ -1,0 +1,3 @@
+## 2024-04-11 - Screen Reader Overload on High-Frequency Updates
+**Learning:** Applying `aria-live` regions to high-frequency UI elements (like 10Hz telemetry gauges or charts) completely overwhelms screen readers, rendering the interface unusable. `aria-live` must be strictly reserved for low-frequency, discrete updates (like alert logs and risk badge changes).
+**Action:** Implemented `aria-live="polite"` only on the `#alert-list` and `#risk-badge` elements, leaving the high-frequency `#gauge-value` and charts without live regions. Additionally, added `:focus-visible` styles to interactive elements for keyboard accessibility.
