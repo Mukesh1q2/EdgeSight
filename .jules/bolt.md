@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid string parsing in high-frequency loops
+**Learning:** Using computationally expensive string operations like `datetime.strptime()` to parse timestamps back and forth inside a high-frequency hot loop (like a 30 FPS computer vision `detection_loop`) is an anti-pattern. This needlessly burns CPU cycles and generates garbage collection pressure, reducing performance.
+**Action:** Always use native data types (like float timestamps from `time.time()`) and pre-calculated deltas for time tracking and throttling within hot loops. Defer string formatting (like `strftime`) until after conditional checks or rate limits have passed, minimizing unnecessary object creation.
