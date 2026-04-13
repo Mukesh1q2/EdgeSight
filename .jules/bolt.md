@@ -1,0 +1,3 @@
+## 2024-05-24 - Defer String Formatting and Parsing in Hot Loops
+**Learning:** Performing string manipulation functions such as `datetime.strptime()` or `datetime.now().strftime()` in high-frequency computer vision hot loops (e.g., a 30 FPS async detection loop) is a significant performance anti-pattern. These methods are computationally expensive and can block execution.
+**Action:** Use native data types (like float timestamps using `time.time()`) to track delta times for logic conditions (like rate limits and cooldowns). Always defer string formatting (like `strftime()`) until *after* the logic condition has passed.
