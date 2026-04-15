@@ -1,0 +1,3 @@
+## 2026-04-15 - [Expensive String Parsing in Hot Loop]
+**Learning:** Using `datetime.strptime` inside the high-frequency (30 FPS) computer vision hot loop (`detection_loop` in `fastapi_server.py`) for checking the 2-second alert cooldown is a performance anti-pattern. Parsing string timestamps repeatedly slows down the async event loop and increases inference latency.
+**Action:** Use native data types like `float` timestamps (e.g., `time.time()`) and pre-calculated deltas instead. Defer computationally expensive string operations like `datetime.strftime` until *after* condition checks and rate limits have passed.
