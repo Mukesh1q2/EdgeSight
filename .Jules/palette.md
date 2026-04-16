@@ -1,0 +1,3 @@
+## 2026-04-16 - Add aria-live and focus-visible states
+**Learning:** Real-time UI components with low-frequency updates (like alert logs and risk badges) must implement `aria-live` regions (e.g., `aria-live="polite"`) to ensure they are announced by screen readers. Decorative icons within text-labeled buttons should be hidden with `aria-hidden="true"`. Interactive UI elements must implement `:focus-visible` styling (typically a 2px primary color outline with offset) to maintain keyboard navigation accessibility.
+**Action:** Use existing design system classes to add accessibility attributes to appropriate elements. Avoid custom CSS, and always verify with tests considering the UI hierarchy and focus indicators.
