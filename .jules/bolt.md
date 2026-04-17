@@ -1,0 +1,3 @@
+## 2024-05-24 - Deferring Expensive String Formatting in High-Frequency Loops
+**Learning:** Performing computationally expensive string operations like `datetime.strptime()` or `datetime.now().strftime()` inside a high-frequency (e.g., 30 FPS) computer vision hot loop (`detection_loop` in `fastapi_server.py`) can degrade performance. Before this optimization, string allocations and parsing happened on *every* frame where fall probability > threshold, regardless of rate limits.
+**Action:** Use native data types (like float timestamps from `time.time()`) for logic and rate-limiting. Defer all expensive operations (e.g., dictionary creation and string formatting) until *after* conditional checks or rate limits have been passed.
