@@ -1,0 +1,3 @@
+## 2026-04-18 - String Operations in 30 FPS Hot Loops
+**Learning:** Found a severe performance bottleneck where computationally expensive string operations (`datetime.strptime()` and `datetime.strftime()`) were being executed synchronously inside the 30 FPS `detection_loop` hot path, causing unnecessary CPU overhead and potential frame drops. Furthermore, the string formatting was happening BEFORE the conditional rate limit check, wasting cycles when alerts were skipped.
+**Action:** Always use native data types (like floats from `time.time()`) for high-frequency time comparisons instead of parsing strings. Defer computationally expensive operations (like string formatting) until AFTER conditional checks or rate limits have passed.
