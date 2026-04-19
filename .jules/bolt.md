@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid datetime parsing in high-frequency computer vision hot loops]
+**Learning:** Using computationally expensive string operations like `datetime.strptime()` and `datetime.strftime()` inside the high-frequency (~30 FPS) `detection_loop` in `fastapi_server.py` to enforce alert rate limits is a major bottleneck. A local benchmark showed that parsing datetime strings is over 170x slower than comparing primitive floats obtained from `time.time()`.
+**Action:** Always use native numeric types (`float`, `int`) and basic arithmetic for timestamp comparisons and rate-limiting inside hot loops. Defer string formatting operations (`datetime.strftime()`) until *after* the rate limit or condition has been satisfied.
