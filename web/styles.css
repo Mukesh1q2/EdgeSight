@@ -720,3 +720,11 @@ body {
         font-size: 2rem;
     }
 }
+
+/* Focus Visible for Keyboard Accessibility */
+.btn:focus-visible,
+.slider:focus-visible,
+.selector select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
