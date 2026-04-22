@@ -1,0 +1,3 @@
+## 2025-02-23 - Optimizing Alert Cooldown Checks in High-Frequency Loops
+**Learning:** Performing computationally expensive string operations like `datetime.strptime()` inside a high-frequency (e.g., 30 FPS) computer vision hot loop (`detection_loop`) creates unnecessary overhead and can become a performance bottleneck.
+**Action:** Use native data types and pre-calculated deltas (like float timestamps from `time.time()`) for logic like throttling or rate-limiting. Defer expensive string formatting (like `datetime.strftime()`) until after condition checks have passed.
