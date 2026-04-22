@@ -1,0 +1,3 @@
+## 2024-04-22 - Improved Keyboard Navigation Focus and Screen Reader Output for Icons
+**Learning:** Decorative text symbols (like ▶ and ⏹) used as icons inside buttons are announced by screen readers, creating noisy and confusing audio feedback. Furthermore, the dashboard's interactive elements lacked distinct focus indicators when navigated via keyboard.
+**Action:** Always add `aria-hidden="true"` to decorative icon spans to ensure screen readers ignore them. Implement `:focus-visible` styling (typically using `outline` with `var(--primary)`) on interactive components (`.btn`, `.slider`, `select`) to provide clear visual feedback specifically for keyboard users without affecting mouse users.
