@@ -1,0 +1,3 @@
+## 2026-04-26 - Appropriate ARIA Live Regions for Real-Time Dashboards
+**Learning:** Applying `aria-live` regions indiscriminately to a high-frequency real-time AI dashboard (e.g., a 10Hz telemetry chart or gauge) completely overwhelms screen readers, rendering the interface unusable. However, low-frequency updates like alert logs and risk level badges critically require `aria-live` (e.g., `aria-live="polite"`) to be properly announced.
+**Action:** When working on real-time dashboards, explicitly target `aria-live="polite"` only on low-frequency, actionable elements (like alert lists or status badges) and avoid putting it on high-frequency continuous telemetry elements.
