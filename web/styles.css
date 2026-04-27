@@ -720,3 +720,18 @@ body {
         font-size: 2rem;
     }
 }
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.btn:focus-visible,
+.selector select:focus-visible,
+.slider:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.slider::-webkit-slider-thumb:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
