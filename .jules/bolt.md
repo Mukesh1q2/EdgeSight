@@ -1,0 +1,3 @@
+## 2025-03-01 - Avoid Datetime Parsing in 30 FPS Hot Loops
+**Learning:** Performing `datetime.strptime()` parsing and `datetime.strftime()` formatting inside the high-frequency 30 FPS `detection_loop` in `fastapi_server.py` causes unnecessary CPU overhead. Parsing strings to check alert rate limits is an anti-pattern.
+**Action:** Always use native float variables (like `time.time()`) for tracking durations and rate limits in high-frequency loops. Defer expensive string formatting operations (like `strftime()`) until *after* the rate-limit checks have passed, so they only run when an event actually occurs.
