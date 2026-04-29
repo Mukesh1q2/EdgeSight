@@ -121,6 +121,7 @@ class DetectionState:
         self.pose_detected = False
         self.inference_latency_ms = 0.0
         self.lock = threading.Lock()
+        self.last_alert_time = 0.0
 
         # MediaPipe
         self.pose = None
@@ -420,13 +421,14 @@ async def detection_loop():
 
         # ---- Check for alert ----
         if state.fall_probability > state.threshold:
-            alert = {
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "probability": round(state.fall_probability, 3)
-            }
             # Don't spam alerts — cooldown of 2 seconds
-            if not state.alerts or (datetime.now() - datetime.strptime(
-                    state.alerts[-1]["timestamp"], "%H:%M:%S")).seconds >= 2:
+            # Optimization: Use float timestamp delta instead of string formatting/parsing in hot loop
+            if not state.alerts or (time.time() - state.last_alert_time) >= 2.0:
+                state.last_alert_time = time.time()
+                alert = {
+                    "timestamp": datetime.now().strftime("%H:%M:%S"),
+                    "probability": round(state.fall_probability, 3)
+                }
                 state.alerts.append(alert)
             if len(state.alerts) > 100:
                 state.alerts.pop(0)
