@@ -1,0 +1,3 @@
+## 2024-05-24 - Optimize Alert Throttling in Hot Loop
+**Learning:** Performing string operations like `datetime.strptime()` and unconditional `strftime()` inside high-frequency (30 FPS) computer vision hot loops (like `detection_loop`) wastes CPU cycles and creates unnecessary performance bottlenecks, especially since the parsing is just to check if a small time delta has elapsed.
+**Action:** Use fast, native float comparisons (like `time.time()`) to handle rate-limiting and cooldowns in hot loops, and defer computationally expensive string formatting or JSON construction until after the conditional checks have passed.
