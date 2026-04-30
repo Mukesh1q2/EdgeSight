@@ -51,7 +51,7 @@
             </div>
             <div class="video-container" id="video-container">
                 <div class="video-placeholder" id="video-placeholder">
-                    <div class="video-placeholder__icon" id="video-placeholder-icon">👁️</div>
+                    <div class="video-placeholder__icon" id="video-placeholder-icon" aria-hidden="true">👁️</div>
                     <p id="video-placeholder-text">Click <strong>START</strong> to begin detection</p>
                 </div>
                 <img id="video-feed" src="" alt="Live Video Feed" style="display:none;">
@@ -89,7 +89,7 @@
             </div>
 
             <!-- Risk Badge -->
-            <div class="risk-badge" id="risk-badge">
+            <div class="risk-badge" id="risk-badge" aria-live="polite">
                 <span class="risk-badge__level" id="risk-level">LOW</span>
             </div>
 
@@ -112,9 +112,9 @@
             <div class="alert-card">
                 <h3 class="alert-title">
                     <span>Alert Log</span>
-                    <span class="alert-count" id="alert-count">0</span>
+                    <span class="alert-count" id="alert-count" aria-live="polite">0</span>
                 </h3>
-                <ul class="alert-list" id="alert-list">
+                <ul class="alert-list" id="alert-list" aria-live="polite">
                     <li class="alert-empty">No alerts yet</li>
                 </ul>
             </div>
@@ -125,10 +125,10 @@
     <footer class="bottombar">
         <div class="bottombar__controls">
             <button class="btn btn--start" id="btn-start" onclick="startDetection()">
-                <span class="btn__icon">▶</span> START
+                <span class="btn__icon" aria-hidden="true">▶</span> START
             </button>
             <button class="btn btn--stop" id="btn-stop" onclick="stopDetection()" disabled>
-                <span class="btn__icon">⏹</span> STOP
+                <span class="btn__icon" aria-hidden="true">⏹</span> STOP
             </button>
         </div>
         <div class="bottombar__selectors">
