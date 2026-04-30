@@ -1,0 +1,3 @@
+## 2024-04-30 - Real-time Dashboard Accessibility Patterns
+**Learning:** High-frequency dashboard elements (like 10Hz gauges) overwhelm screen readers if marked with `aria-live`. However, low-frequency state changes like alert logs and risk badge level changes are crucial and must use `aria-live="polite"` to be announced. Interactive elements in this custom UI also lacked explicit `:focus-visible` outlines, hiding keyboard navigation state.
+**Action:** Always verify keyboard focus states with `:focus-visible` (using a 2px primary color outline with offset) on custom elements. Use `aria-live="polite"` selectively only on low-frequency update containers to avoid screen reader spam.
