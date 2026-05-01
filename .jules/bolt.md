@@ -1,0 +1,3 @@
+## 2024-05-19 - Optimize alert throttling in detection loop
+**Learning:** Avoid using computationally expensive string operations like `datetime.strptime()` or even string formatting like `strftime()` inside high-frequency computer vision hot loops unless absolutely necessary. In `fastapi_server.py`, the detection loop (~30 FPS) was parsing a timestamp string from the last alert on *every* frame where fall probability exceeded the threshold, blocking the event loop.
+**Action:** Use native data types (like float timestamps from `time.time()`) and pre-calculated deltas for time comparisons and rate limiting. Defer expensive string formatting (like `datetime.now().strftime`) until after the rate limit passes.
