@@ -431,6 +431,10 @@ body {
     border-radius: var(--radius-full);
     outline: none;
 }
+.slider:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+}
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -589,6 +593,11 @@ body {
     letter-spacing: 0.08em;
     cursor: pointer;
     transition: all 0.25s var(--ease);
+    outline: none;
+}
+.btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 .btn__icon { font-size: 0.75rem; }
 
@@ -651,6 +660,10 @@ body {
 .selector select:focus {
     border-color: var(--primary);
     box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+}
+.selector select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
 .version-tag {
