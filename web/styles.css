@@ -95,6 +95,16 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--outline); }
 
 /* ============================================
+   Accessibility
+   ============================================ */
+button:focus-visible,
+.slider:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ============================================
    TOP BAR
    ============================================ */
 .topbar {
