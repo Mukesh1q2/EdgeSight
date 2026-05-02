@@ -169,7 +169,9 @@ After downloading, run preprocess.py to extract pose features.
         Returns:
             Tuple of (total, fall_count, non_fall_count, avg_duration)
         """
-        video_exts = {'.avi', '.mp4', '.mov', '.mkv', '.mpg', '.mpeg'}
+        # Bolt Performance Optimization:
+        # Changed video_exts from set to tuple for faster .endswith() checking inside the hot loop.
+        video_exts = ('.avi', '.mp4', '.mov', '.mkv', '.mpg', '.mpeg')
         total = 0
         fall_count = 0
         non_fall_count = 0
@@ -177,7 +179,8 @@ After downloading, run preprocess.py to extract pose features.
 
         for root, _, files in os.walk(directory):
             for file in files:
-                if any(file.lower().endswith(ext) for ext in video_exts):
+                # Optimized .endswith() to accept the tuple directly, eliminating generator overhead.
+                if file.lower().endswith(video_exts):
                     total += 1
                     file_lower = file.lower()
                     # Heuristic classification based on filename/path
