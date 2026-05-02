@@ -265,7 +265,9 @@ class Preprocessor:
         """
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        video_exts = {'.avi', '.mp4', '.mov', '.mkv', '.mpg', '.mpeg', '.webm'}
+        # Bolt Performance Optimization:
+        # Changed video_exts from set to tuple for faster .endswith() checking inside the hot loop.
+        video_exts = ('.avi', '.mp4', '.mov', '.mkv', '.mpg', '.mpeg', '.webm')
         all_X = []
         all_y = []
         stats = {
@@ -281,7 +283,8 @@ class Preprocessor:
         video_files = []
         for root, _, files in os.walk(data_dir):
             for file in files:
-                if any(file.lower().endswith(ext) for ext in video_exts):
+                # Optimized .endswith() to accept the tuple directly, eliminating generator overhead.
+                if file.lower().endswith(video_exts):
                     video_files.append(Path(root) / file)
 
         print(f"[INFO] Found {len(video_files)} video files in {data_dir}")
