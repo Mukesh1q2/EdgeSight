@@ -1,0 +1,3 @@
+## 2024-05-03 - Accessible Interactivity
+**Learning:** Focus states must be distinct from normal styles, particularly for custom input elements like `.slider::-webkit-slider-thumb`, to ensure proper keyboard navigation visibility. Also, low-frequency dynamic components like alert logs should use `aria-live="polite"` rather than aggressive ARIA states or no states, to properly update assistive tech without overwhelming the user.
+**Action:** Always include `:focus-visible` outline offsets using standard system variables and apply `aria-live="polite"` to log lists and dynamic status badges by default.
