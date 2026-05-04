@@ -1,0 +1,3 @@
+## 2024-05-24 - Expensive Datetime Operations in Event Loops
+**Learning:** Performing datetime string formatting (`datetime.now().strftime()`) and parsing (`datetime.strptime()`) within a high-frequency (e.g., 30FPS) event loop introduces unnecessary CPU overhead and can cause latency spikes, especially when used merely for thresholding or throttling checks.
+**Action:** Always prefer lightweight floating-point time operations (e.g., `time.time()`) for tracking duration and throttling in hot paths. Defer expensive string formatting until after the rate limits or conditional checks have passed, or when preparing data for API responses.
