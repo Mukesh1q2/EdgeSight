@@ -343,18 +343,22 @@ async def detection_loop():
 
         # ---- Capture frame ----
         if state.camera_available and state.cap and state.cap.isOpened():
-            ret, raw_frame = state.cap.read()
+            # Offload blocking I/O and CPU-bound tasks to worker threads via asyncio.to_thread
+            # to prevent blocking the main asyncio event loop (which starves WebSockets/MJPEG).
+            # Expected impact: Improves API/WebSocket responsiveness significantly under load.
+            ret, raw_frame = await asyncio.to_thread(state.cap.read)
             if ret and raw_frame is not None:
                 frame = raw_frame.copy()
                 # Extract pose with MediaPipe
-                keypoints_result = extract_keypoints_mediapipe(raw_frame)
+                keypoints_result = await asyncio.to_thread(extract_keypoints_mediapipe, raw_frame)
                 if keypoints_result:
                     keypoints = keypoints_result
                     state.pose_detected = True
                     # Draw skeleton on frame
-                    draw_skeleton(frame, keypoints)
+                    await asyncio.to_thread(draw_skeleton, frame, keypoints)
                 else:
                     state.pose_detected = False
+            else:
                 # Camera read failed
                 state.camera_available = False
                 if state.cap:
@@ -408,7 +412,8 @@ async def detection_loop():
                 state.sequence_buffer.pop(0)
 
             if len(state.sequence_buffer) == SEQUENCE_LENGTH:
-                state.fall_probability = run_inference(state.sequence_buffer)
+                # Offload CPU-bound inference to worker thread
+                state.fall_probability = await asyncio.to_thread(run_inference, state.sequence_buffer)
 
         # ---- Update FPS ----
         state.frame_count += 1
