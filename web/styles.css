@@ -431,6 +431,10 @@ body {
     border-radius: var(--radius-full);
     outline: none;
 }
+.slider:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -590,6 +594,10 @@ body {
     cursor: pointer;
     transition: all 0.25s var(--ease);
 }
+.btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
 .btn__icon { font-size: 0.75rem; }
 
 .btn--start {
@@ -647,6 +655,10 @@ body {
     font-size: 0.78rem;
     cursor: pointer;
     outline: none;
+}
+.selector select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 .selector select:focus {
     border-color: var(--primary);

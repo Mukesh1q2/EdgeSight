@@ -1,0 +1,3 @@
+## 2024-05-08 - Keyboard Navigation Support for Custom Interactive Elements
+**Learning:** Custom interactive UI controls (like sliders, buttons with custom background/border resets, and styled selects) lack native browser focus styles when using keyboard navigation, making the interface completely inaccessible for non-mouse users.
+**Action:** Always implement `:focus-visible` styling (using a visible outline, e.g., 2px solid with an offset) on all custom interactive elements, tying it to existing design system tokens like `--primary` to maintain visual consistency while ensuring WCAG keyboard accessibility standards.
