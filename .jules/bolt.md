@@ -1,0 +1,3 @@
+## 2024-05-08 - FastAPI tight loop timestamp bottleneck
+**Learning:** In highly frequent real-time loops (like video frame processing in `fastapi_server.py`), using `datetime.strptime()` and `datetime.now().strftime()` for simple timeout and rate-limiting logic creates severe CPU overhead due to expensive string parsing and object allocation. This was taking ~0.05ms per frame which adds up significantly at high FPS.
+**Action:** Always use float timestamps (`time.time()`) for internal state tracking, cooldowns, and rate-limiting within tight loops, reserving string formatting purely for the moment data is serialized/rendered to the client.
