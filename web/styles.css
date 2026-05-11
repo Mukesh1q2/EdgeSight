@@ -445,6 +445,10 @@ body {
 .slider::-webkit-slider-thumb:hover {
     box-shadow: 0 0 18px rgba(0, 212, 255, 0.6);
 }
+.slider:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.3);
+    border: 2px solid var(--surface-low);
+}
 
 .slider-value {
     font-family: var(--font-display);
@@ -605,6 +609,10 @@ body {
     opacity: 0.4;
     cursor: not-allowed;
 }
+.btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
 
 .btn--stop {
     background: linear-gradient(135deg, var(--tertiary-soft), var(--tertiary));
@@ -651,6 +659,10 @@ body {
 .selector select:focus {
     border-color: var(--primary);
     box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+}
+.selector select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
 .version-tag {
