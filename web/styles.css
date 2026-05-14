@@ -446,6 +446,11 @@ body {
     box-shadow: 0 0 18px rgba(0, 212, 255, 0.6);
 }
 
+.slider:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+}
+
 .slider-value {
     font-family: var(--font-display);
     font-size: 0.9rem;
@@ -618,6 +623,11 @@ body {
 .btn--stop:disabled {
     opacity: 0.3;
     cursor: not-allowed;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
 .bottombar__selectors {
