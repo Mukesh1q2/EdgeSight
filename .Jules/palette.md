@@ -1,0 +1,3 @@
+## 2024-05-16 - Focus States for Custom UI Controls
+**Learning:** The custom glassmorphism design system ("Aegis Vision") relies heavily on `-webkit-appearance: none` for inputs like sliders, completely stripping native browser focus rings. The existing CSS variables like `--primary` are perfect for reconstructing these states manually.
+**Action:** When implementing custom interactive controls in this architecture, explicitly add `:focus-visible` (not `:focus`) rules using `outline` and `outline-offset` with the `--primary` variable to ensure keyboard accessibility without penalizing mouse users.
