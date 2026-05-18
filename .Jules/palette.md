@@ -1,0 +1,3 @@
+## 2026-05-18 - Missing keyboard focus states on custom UI controls
+**Learning:** Custom UI elements like sliders (`input[type="range"]`) and buttons styled with `-webkit-appearance: none;` lose their default browser focus rings. In Aegis Vision, `outline: none` was explicitly set on `.slider` and `.selector select` without providing a `:focus-visible` fallback, breaking keyboard accessibility (WCAG 2.4.7 Focus Visible).
+**Action:** Always pair `outline: none` with a `:focus-visible` state using a prominent design token (e.g., `var(--primary)`) and `outline-offset` to ensure keyboard users can track their position without penalizing mouse/touch users with unwanted focus rings.
