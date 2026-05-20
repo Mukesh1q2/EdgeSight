@@ -1,0 +1,3 @@
+## 2024-05-20 - FastAPI MJPEG Streaming Bottleneck
+**Learning:** In Starlette/FastAPI, returning a synchronous generator for a `StreamingResponse` causes the framework to iterate over it using a threadpool worker. If the generator includes `time.sleep` (e.g., to control framerate in an MJPEG stream), it effectively monopolizes that worker for the duration of the sleep, leading to severe concurrency issues and blocking the event loop for other endpoints.
+**Action:** Always implement streaming generators using `async def` and use `await asyncio.sleep` to release the event loop. Additionally, offload CPU-bound tasks within the stream (like `cv2.imencode`) to the threadpool using `asyncio.to_thread`.
