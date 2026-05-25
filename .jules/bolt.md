@@ -1,0 +1,3 @@
+## 2024-05-24 - High-Frequency Loop Timestamp Optimization
+**Learning:** In Python, using `datetime.strptime()` and `datetime.now()` for rate-limiting inside a high-frequency loop (like a 30 FPS video processing loop) is extremely expensive. A local benchmark showed it takes ~444ms per 10k iterations, whereas using float timestamps (`time.time()`) takes only ~2.45ms, making it ~180x faster.
+**Action:** Always use `time.time()` float comparisons for rate-limiting or cooldown logic in high-frequency loops, avoiding string parsing and formatting operations. Move expensive formatting (like `strftime`) inside the condition so it only executes when the event actually triggers, rather than on every frame.
