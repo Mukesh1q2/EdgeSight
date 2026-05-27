@@ -1,0 +1,3 @@
+## 2026-05-27 - Custom UI Controls Lack Native Focus Styles
+**Learning:** Custom interactive UI controls (like sliders, selectors, and styled buttons) in the Aegis Vision design system lack native focus styles and must implement `:focus-visible` outlines using existing design tokens (e.g., `var(--primary)`) to ensure proper keyboard accessibility.
+**Action:** Always add explicit `:focus-visible` styles with appropriate outline and offset utilizing the defined primary token for interactive elements, specially custom styled components in this codebase.
