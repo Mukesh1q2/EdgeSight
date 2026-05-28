@@ -1,0 +1,3 @@
+## 2024-05-28 - Dynamic Alert Log Accessibility
+**Learning:** Dynamic DOM insertions, like the real-time fall detection alerts injected into the alert log list (`<ul>`), are completely silent to screen readers by default. This makes critical safety information inaccessible to users relying on assistive technology.
+**Action:** Always add `aria-live="assertive"` (or `polite` for non-critical updates) and `role="log"` to the container element of dynamically updated lists to ensure screen readers automatically announce new items as they appear.
