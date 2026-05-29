@@ -1,0 +1,3 @@
+## 2024-05-29 - Missing Focus States and Dynamic Region Roles
+**Learning:** The Aegis Vision design system initially lacked visible keyboard focus states (`:focus-visible`) for buttons, relying only on hover states. Furthermore, dynamically updating elements like the `#alert-list` were missing `aria-live` regions, meaning critical updates wouldn't be announced to screen readers.
+**Action:** Always ensure that interactive elements have a defined `:focus-visible` outline mapped to the primary design token, and apply `aria-live="assertive"` with `role="log"` to elements that receive real-time, important updates without user interaction.
