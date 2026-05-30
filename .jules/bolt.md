@@ -1,0 +1,3 @@
+## 2024-11-20 - Avoid datetime string parsing in high-frequency loops
+**Learning:** In `fastapi_server.py`, checking for alert rate-limiting used `datetime.strptime()` on formatted string timestamps within a high-frequency video processing loop. This string parsing operation is extremely slow (over 50x slower in benchmarks) and consumes unnecessary CPU cycles on every frame, creating a bottleneck.
+**Action:** Use float timestamps from `time.time()` for all internal rate-limiting, cooldowns, and state tracking within loops. Only format timestamps to strings when serializing for API responses or rendering to the UI.
