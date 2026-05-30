@@ -1,5 +1,5 @@
 /**
- * EdgeSight Dashboard — Client-Side Application
+ * EdgeSight Dashboard - Client-Side Application
  * Real-time WebSocket connection, animated gauge, rolling chart, alert log
  */
 
