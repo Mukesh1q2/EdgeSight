@@ -1,0 +1,3 @@
+## 2024-06-02 - Time parsing bottleneck in hot loop
+**Learning:** Using `datetime.strptime()` for parsing timestamps inside high-frequency frames (~30 FPS) is significantly more expensive than direct float operations. In Python, using `time.time()` differences is roughly ~100x faster than parsing back and forth between strings and dates.
+**Action:** When implementing rate limiting or timeout logic in processing loops, always use `time.time()` float timestamps for the mathematical difference rather than parsing formatted time strings. Formatted time strings should only be generated for user display/logging.
