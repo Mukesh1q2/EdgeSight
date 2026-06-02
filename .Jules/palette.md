@@ -1,0 +1,3 @@
+## 2024-06-02 - Keyboard Accessibility and Screen Reader Feedback
+**Learning:** The Aegis Vision design system requires explicit `:focus-visible` styles (`outline: 2px solid var(--primary);`) for interactive elements. Additionally, dynamically updated UI elements like the real-time `#alert-list` must use `aria-live='assertive'` and `role='log'` to ensure screen readers announce new items immediately.
+**Action:** Always verify that interactive components have `:focus-visible` states defined in `web/styles.css` using the existing design tokens, and ensure dynamic content regions use appropriate ARIA attributes for real-time announcements.
