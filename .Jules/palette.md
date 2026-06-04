@@ -1,0 +1,3 @@
+## 2024-06-04 - Custom Range Slider Focus Accessibility
+**Learning:** When styling focus states for custom range sliders, the `:focus-visible` pseudo-class should be applied to the input element itself, while targeting the webkit thumb pseudo-element (i.e. `.slider:focus-visible::-webkit-slider-thumb`), rather than applying it directly to `.slider::-webkit-slider-thumb:focus-visible`.
+**Action:** Use the pattern `.slider:focus-visible::-webkit-slider-thumb { outline: ... }` when implementing accessible keyboard focus states for custom sliders to ensure visual indication is properly displayed.
