@@ -1,0 +1,3 @@
+## 2024-05-18 - Expensive String Parsing in High-Frequency Loops
+**Learning:** In Python, parsing string-based timestamps with `datetime.strptime()` inside a high-frequency loop (like a 30 FPS video processing loop) introduces significant overhead (up to ~44x slower than `time.time()`). In the `detection_loop` of `fastapi_server.py`, the rate-limiting cooldown check parsed the last alert timestamp string on every frame when an alert condition was met.
+**Action:** Use float timestamps (e.g., `time.time()`) for high-frequency state tracking and cooldown checks, keeping string formatting only for the final output dictionary/payload.
