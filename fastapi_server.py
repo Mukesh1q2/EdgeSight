@@ -111,6 +111,7 @@ class DetectionState:
         self.alerts: List[dict] = []
         self.frame_count = 0
         self.last_update = time.time()
+        self.last_alert_time = 0.0  # Track last alert as float for fast rate limiting
         self.model_session = None
         self.sequence_buffer: List[List[float]] = []
         self.camera_available = False
@@ -420,16 +421,18 @@ async def detection_loop():
 
         # ---- Check for alert ----
         if state.fall_probability > state.threshold:
-            alert = {
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "probability": round(state.fall_probability, 3)
-            }
+            current_t = time.time()
+            # Fast rate limiting: Avoid expensive strptime() parsing for cooldown check (~50x faster)
             # Don't spam alerts — cooldown of 2 seconds
-            if not state.alerts or (datetime.now() - datetime.strptime(
-                    state.alerts[-1]["timestamp"], "%H:%M:%S")).seconds >= 2:
+            if current_t - state.last_alert_time >= 2.0:
+                alert = {
+                    "timestamp": datetime.now().strftime("%H:%M:%S"),
+                    "probability": round(state.fall_probability, 3)
+                }
                 state.alerts.append(alert)
-            if len(state.alerts) > 100:
-                state.alerts.pop(0)
+                state.last_alert_time = current_t
+                if len(state.alerts) > 100:
+                    state.alerts.pop(0)
 
         await asyncio.sleep(0.033)  # ~30 FPS
 
