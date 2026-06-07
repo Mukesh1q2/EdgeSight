@@ -1,0 +1,3 @@
+## 2024-05-16 - Real-time Alert Accessibility and Custom Slider Focus States
+**Learning:** Dynamically updated UI elements (like real-time alert logs) require `aria-live="assertive"` and `role="log"` to ensure screen readers announce new items immediately. Furthermore, styling `:focus-visible` on custom range sliders requires targeting `.slider:focus-visible::-webkit-slider-thumb` instead of `.slider::-webkit-slider-thumb:focus-visible`.
+**Action:** Always include `aria-live` regions for dynamic lists and use the correct pseudo-element chaining for webkit slider thumb focus states in custom CSS systems.
