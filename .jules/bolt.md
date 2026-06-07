@@ -1,0 +1,3 @@
+## 2024-05-24 - Rate Limiting Performance Bottleneck in High-Frequency Loops
+**Learning:** Using `datetime.strptime()` with string format "%H:%M:%S" to calculate time differences inside the high-frequency asynchronous `detection_loop` (running at ~30 FPS) is extremely slow compared to primitive float operations. The benchmark showed `strptime()` string parsing to be roughly 50x slower (0.1457s vs 0.0028s per 10k iterations) than comparing UNIX timestamps, which can introduce unnecessary overhead and block the event loop in concurrent applications.
+**Action:** When implementing rate-limiting or cooldowns in high-frequency event loops, always store and compare timestamps using `time.time()` (floats) instead of formatting and parsing date strings.
