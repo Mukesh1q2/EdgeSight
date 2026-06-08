@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid datetime.strptime in high-frequency loops for time-only formats
+**Learning:** Using `datetime.strptime()` with time-only formats (e.g., "%H:%M:%S") defaults the date to 1900-01-01, making timedelta calculations against `datetime.now()` incorrect when day boundaries are crossed. Furthermore, doing this inside a high-frequency loop (like video processing at 30 FPS) introduces a significant performance penalty compared to simple float subtraction using `time.time()`.
+**Action:** Always use float timestamps (`time.time()`) for tracking rate limits or cooldowns instead of string parsing/formatting, and only format human-readable timestamps when absolutely necessary (e.g., when creating the final output object).
