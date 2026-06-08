@@ -445,6 +445,10 @@ body {
 .slider::-webkit-slider-thumb:hover {
     box-shadow: 0 0 18px rgba(0, 212, 255, 0.6);
 }
+.slider:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
 
 .slider-value {
     font-family: var(--font-display);
@@ -592,6 +596,11 @@ body {
 }
 .btn__icon { font-size: 0.75rem; }
 
+.btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
 .btn--start {
     background: linear-gradient(135deg, var(--primary-soft), var(--primary));
     color: var(--primary-dark);
@@ -651,6 +660,10 @@ body {
 .selector select:focus {
     border-color: var(--primary);
     box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+}
+.selector select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
 .version-tag {
