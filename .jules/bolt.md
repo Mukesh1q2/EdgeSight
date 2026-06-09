@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid expensive datetime string parsing in high-frequency loops
+**Learning:** Parsing strings to datetimes using `datetime.strptime` is an unexpectedly expensive operation (~1.5s for 100k iterations). Performing this calculation inside a 30 FPS video processing loop for calculating time deltas creates a significant, unnecessary performance bottleneck and wastes CPU cycles.
+**Action:** Use float timestamps (e.g., `time.time()`) for tracking durations and time deltas in high-frequency loops. It is ~60x faster than `datetime.strptime`. If the API requires formatted timestamp strings, store those separately from the raw float timestamp used for interval calculations.
