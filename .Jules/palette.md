@@ -1,0 +1,3 @@
+## 2024-05-15 - Focus States and Alert List ARIA
+**Learning:** Custom UI components like the slider require explicit `:focus-visible` styles for keyboard navigation, particularly targeting the specific input element and its webkit-thumb to match the design system. Furthermore, dynamic elements such as the `#alert-list` require `aria-live='assertive'` and `role='log'` so that screen readers correctly announce real-time alerts.
+**Action:** Always ensure that `aria-live` and `role="log"` are used for real-time notification feeds. Always apply `:focus-visible` for keyboard users when creating custom inputs, especially range sliders, targeting both the base element and pseudo-elements where needed.
