@@ -1,0 +1,3 @@
+## 2024-05-24 - Rate Limiting Optimization in High Frequency Async Loops
+**Learning:** Parsing string timestamps with `datetime.strptime()` inside a high-frequency async video stream loop (`detection_loop()`) introduces massive overhead compared to primitive float comparison. In `fastapi_server.py`, an alert throttling mechanism was calculating cooldown by parsing `"HH:MM:SS"` back into a datetime object 30 times a second. Local benchmarking showed `time.time()` math is ~70x faster than `strptime`.
+**Action:** Always use raw float values (like `time.time()`) for any timestamp tracking, rate limiting, or math within rapid event loops, leaving `datetime.strftime` purely for formatting presentation payloads.
