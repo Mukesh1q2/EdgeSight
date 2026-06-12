@@ -122,6 +122,9 @@ class DetectionState:
         self.inference_latency_ms = 0.0
         self.lock = threading.Lock()
 
+        # ⚡ Bolt optimization: Track time using fast float timestamps instead of string parsing
+        self.last_alert_time: float = 0.0
+
         # MediaPipe
         self.pose = None
         if MEDIAPIPE_AVAILABLE:
@@ -420,16 +423,18 @@ async def detection_loop():
 
         # ---- Check for alert ----
         if state.fall_probability > state.threshold:
-            alert = {
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "probability": round(state.fall_probability, 3)
-            }
-            # Don't spam alerts — cooldown of 2 seconds
-            if not state.alerts or (datetime.now() - datetime.strptime(
-                    state.alerts[-1]["timestamp"], "%H:%M:%S")).seconds >= 2:
+            current_t = time.time()
+            # ⚡ Bolt optimization: Use float timestamps for rate-limiting (O(1) subtraction)
+            # instead of extremely slow datetime.strptime string parsing in a hot loop
+            if not state.alerts or (current_t - state.last_alert_time) >= 2.0:
+                alert = {
+                    "timestamp": datetime.now().strftime("%H:%M:%S"),
+                    "probability": round(state.fall_probability, 3)
+                }
                 state.alerts.append(alert)
-            if len(state.alerts) > 100:
-                state.alerts.pop(0)
+                state.last_alert_time = current_t
+                if len(state.alerts) > 100:
+                    state.alerts.pop(0)
 
         await asyncio.sleep(0.033)  # ~30 FPS
 
