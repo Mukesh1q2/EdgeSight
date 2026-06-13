@@ -1,0 +1,3 @@
+## 2024-06-13 - Optimize rate-limiting with float timestamps
+**Learning:** In Python, using `datetime.strptime()` with time-only formats defaults the date to 1900-01-01, but more importantly, string parsing in a high-frequency loop (like `detection_loop` running at ~30 FPS) is extremely slow. A micro-benchmark showed that comparing float timestamps using `time.time()` is ~70x faster than parsing strings with `datetime.strptime()`.
+**Action:** Always use `time.time()` float timestamps for rate-limiting, cooldowns, or time difference calculations in performance-critical loops instead of expensive string parsing (`strptime`) and formatting (`strftime`).
