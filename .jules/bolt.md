@@ -1,0 +1,3 @@
+## 2024-06-15 - Optimize rate-limiting with float timestamps
+**Learning:** In Python, using `datetime.strptime()` with time-only formats (e.g., "%H:%M:%S") defaults the date to 1900-01-01, making timedelta calculations against `datetime.now()` incorrect and prone to latent cross-day bugs. Furthermore, string parsing inside high-frequency loops (e.g., an MJPEG video stream `detection_loop`) introduces significant CPU overhead compared to simple float arithmetic.
+**Action:** Always use `time.time()` for safe and performant rate limiting or time difference calculations instead of formatting and parsing datetime strings.
