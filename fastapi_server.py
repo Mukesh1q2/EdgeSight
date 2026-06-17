@@ -121,6 +121,7 @@ class DetectionState:
         self.pose_detected = False
         self.inference_latency_ms = 0.0
         self.lock = threading.Lock()
+        self.last_alert_time = 0.0
 
         # MediaPipe
         self.pose = None
@@ -296,7 +297,7 @@ def run_inference(sequence: List[List[float]]) -> float:
 # ============================================
 # Video Frame Generator (MJPEG stream)
 # ============================================
-def generate_video_frames():
+async def generate_video_frames():
     """Generate annotated video frames for MJPEG streaming."""
     while state.is_running:
         frame = None
@@ -312,12 +313,12 @@ def generate_video_frames():
             cv2.putText(frame, "Waiting for feed...", (180, 240),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (100, 150, 200), 2)
 
-        ret, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+        ret, buffer = await asyncio.to_thread(cv2.imencode, '.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
         if ret:
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
 
-        time.sleep(0.033)  # ~30 FPS
+        await asyncio.sleep(0.033)  # ~30 FPS
 
 
 # ============================================
@@ -425,9 +426,10 @@ async def detection_loop():
                 "probability": round(state.fall_probability, 3)
             }
             # Don't spam alerts — cooldown of 2 seconds
-            if not state.alerts or (datetime.now() - datetime.strptime(
-                    state.alerts[-1]["timestamp"], "%H:%M:%S")).seconds >= 2:
+            current_t = time.time()
+            if not state.alerts or (current_t - state.last_alert_time) >= 2.0:
                 state.alerts.append(alert)
+                state.last_alert_time = current_t
             if len(state.alerts) > 100:
                 state.alerts.pop(0)
 
