@@ -109,6 +109,7 @@ class DetectionState:
         self.fps = 0
         self.threshold = 0.75
         self.alerts: List[dict] = []
+        self.last_alert_time = 0.0
         self.frame_count = 0
         self.last_update = time.time()
         self.model_session = None
@@ -420,14 +421,17 @@ async def detection_loop():
 
         # ---- Check for alert ----
         if state.fall_probability > state.threshold:
-            alert = {
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "probability": round(state.fall_probability, 3)
-            }
             # Don't spam alerts — cooldown of 2 seconds
-            if not state.alerts or (datetime.now() - datetime.strptime(
-                    state.alerts[-1]["timestamp"], "%H:%M:%S")).seconds >= 2:
+            # ⚡ Bolt: Optimized rate limiting by replacing expensive datetime.strptime
+            # string parsing with float timestamp subtraction (time.time())
+            if not state.alerts or (time.time() - state.last_alert_time) >= 2.0:
+                alert = {
+                    "timestamp": datetime.now().strftime("%H:%M:%S"),
+                    "probability": round(state.fall_probability, 3)
+                }
                 state.alerts.append(alert)
+                state.last_alert_time = time.time()
+
             if len(state.alerts) > 100:
                 state.alerts.pop(0)
 
