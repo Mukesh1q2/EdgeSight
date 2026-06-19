@@ -121,6 +121,7 @@ class DetectionState:
         self.pose_detected = False
         self.inference_latency_ms = 0.0
         self.lock = threading.Lock()
+        self.last_alert_time = 0.0  # Float timestamp for O(1) cooldown checking
 
         # MediaPipe
         self.pose = None
@@ -425,9 +426,10 @@ async def detection_loop():
                 "probability": round(state.fall_probability, 3)
             }
             # Don't spam alerts — cooldown of 2 seconds
-            if not state.alerts or (datetime.now() - datetime.strptime(
-                    state.alerts[-1]["timestamp"], "%H:%M:%S")).seconds >= 2:
+            # ⚡ Bolt Optimization: Use float timestamp arithmetic instead of expensive datetime.strptime parsing in this high-frequency loop
+            if not state.alerts or (time.time() - state.last_alert_time) >= 2.0:
                 state.alerts.append(alert)
+                state.last_alert_time = time.time()
             if len(state.alerts) > 100:
                 state.alerts.pop(0)
 

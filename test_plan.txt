@@ -1,0 +1,8 @@
+I will replace the inefficient `datetime.strptime` cooldown check inside `detection_loop` with a simple float timestamp check.
+1. Add `self.last_alert_time = 0.0` to `DetectionState.__init__` in `fastapi_server.py`.
+2. Update the cooldown logic in `detection_loop` in `fastapi_server.py`:
+   - Replace the `datetime.now() - datetime.strptime(...)` logic with `time.time() - state.last_alert_time >= 2.0`.
+   - Update `state.last_alert_time = time.time()` when an alert is appended.
+3. Verify changes with `python -m py_compile fastapi_server.py`.
+4. Run tests and linters (if any exist) or synthetic benchmark.
+5. Create PR with "⚡ Bolt: [performance improvement]" title.
