@@ -1,0 +1,3 @@
+## 2025-06-25 - Async Generator for MJPEG Streams
+**Learning:** In FastAPI, synchronous streaming generators are executed in a thread pool. Using synchronous operations like `time.sleep()` in a `StreamingResponse` can quickly exhaust the thread pool if multiple streams are opened, making the application unresponsive. Additionally, using an async generator requires offloading CPU-bound operations (like `cv2.imencode`) to prevent blocking the main event loop.
+**Action:** Use `async def` for streaming endpoints, offload CPU-bound work with `asyncio.to_thread`, and replace blocking sleeps with `await asyncio.sleep`.
