@@ -1,0 +1,3 @@
+## 2024-05-24 - FastAPI MJPEG Stream Blocks Event Loop
+**Learning:** `generate_video_frames` is a synchronous generator using `time.sleep()`. When Starlette/FastAPI executes this inside `StreamingResponse`, it runs in a thread pool, but having blocking operations (especially inside a while True loop) can still be less optimal than a proper async generator, and more importantly, `cv2.imencode` is CPU bound.
+**Action:** Convert `generate_video_frames` to an `async def` generator, use `await asyncio.sleep()`, and wrap `cv2.imencode` in `await asyncio.to_thread` to ensure the FastAPI event loop isn't blocked by image encoding and sleep delays.
