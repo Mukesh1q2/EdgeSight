@@ -1,0 +1,3 @@
+## 2024-06-30 - FastAPI streaming response concurrency bottleneck
+**Learning:** Using synchronous generator functions with `time.sleep()` in FastAPI `StreamingResponse` (like `generate_video_frames`) blocks Starlette's threadpool workers. When the number of concurrent stream clients exceeds the threadpool size (default ~40), the entire application event loop becomes starved and unresponsive to other requests (like `/health` checks or new connections).
+**Action:** Always implement long-running video frame generators as `async def` and use `await asyncio.sleep()` for throttling. CPU-bound operations like `cv2.imencode` should be offloaded to threads using `await asyncio.to_thread()` to ensure maximum concurrency and prevent event loop blocking.
