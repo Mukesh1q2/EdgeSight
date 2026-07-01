@@ -49,7 +49,7 @@ def mock_onnx_model():
     # Cleanup
     if os.path.exists(onnx_path):
         os.remove(onnx_path)
-    os.rmdir(temp_dir)
+    import shutil; shutil.rmtree(temp_dir, ignore_errors=True)
 
 
 def test_python_infer_init(mock_onnx_model):

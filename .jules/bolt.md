@@ -1,0 +1,3 @@
+## 2024-07-01 - Offloading MJPEG image encoding to a background thread
+**Learning:** The FastAPI `video_feed` endpoint was a huge bottleneck because it generated video frames synchronously using `time.sleep()`. When many clients connect simultaneously, this blocks the main async event loop.
+**Action:** Changed the `generate_video_frames` generator to be an asynchronous generator using `async def`. Used `await asyncio.to_thread(cv2.imencode, ...)` to offload the CPU-bound image encoding to a separate thread, and used `await asyncio.sleep(...)` instead of `time.sleep(...)`. This allows the server to efficiently handle multiple concurrent video streams without blocking the event loop.
