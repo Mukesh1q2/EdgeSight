@@ -1,0 +1,3 @@
+## 2023-10-24 - Critical Health/Safety Alerts
+**Learning:** Real-time safety alert logs (like the fall detection log) represent critical health/safety emergencies. They must interrupt the screen reader immediately rather than waiting for the user to finish their current context.
+**Action:** Use `aria-live='assertive'` rather than `polite` for any real-time safety alert logs to ensure immediate interruption for critical emergencies.
